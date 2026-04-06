@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: capstone_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  backend:
+    build: .
+    container_name: capstone_backend
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      DB_USER: admin
+      DB_PASSWORD: password
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: capstone_db
+    
+    volumes:
+      - .:/app
+
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
