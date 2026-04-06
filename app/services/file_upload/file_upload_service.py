@@ -1,7 +1,7 @@
 import os
 
 
-UPLOAD_DIR = "/temp"
+UPLOAD_DIR = "/tmp"
 # UPLOAD_DIR = "data"
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
