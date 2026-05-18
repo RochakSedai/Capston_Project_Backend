@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.router.file_upload import file_upload_router
-from app.router.evaluation import evaluation_router
+from app.router.evaluation import evaluation_run_router
 from app.db.session import SessionLocal
 
 
@@ -25,7 +25,8 @@ def get_db():
         db.close()
 
 app.include_router(file_upload_router, prefix="/api/v1")
-app.include_router(evaluation_router, prefix="/api/v1")
+# app.include_router(evaluation_router, prefix="/api/v1")
+app.include_router(evaluation_run_router, prefix="/api/v1")
 
 @app.get("/")
 def read_root():

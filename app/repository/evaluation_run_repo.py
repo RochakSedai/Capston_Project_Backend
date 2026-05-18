@@ -1,25 +1,35 @@
+from uuid import uuid4
+from datetime import datetime
+
 from app.db.schemas import EvaluationRun
+from app.models import EvaluationRunRequest
+from .dataset_repo import get_dataset_by_id
 
 
-def create_evaluation_run(db, evaluation_run):
+def save_evaluation_run(db, evaluation_run: EvaluationRunRequest):
+    run_id = f"run-{uuid4().hex[:8]}"
+    synthetic_dataset_name = get_dataset_by_id(db, evaluation_run.syntheticDatasetId).name
+    
     data = EvaluationRun(
-        run_id=evaluation_run.run_id,
-        run_name=evaluation_run.run_name,
-        created_at_label=evaluation_run.created_at_label,
-        status=evaluation_run.status,
+        run_id=run_id,
+        run_name=synthetic_dataset_name + "_evaluation",
+        created_at_label=datetime.utcnow().strftime(
+            "%d %b %Y %H:%M"
+        ),
+        status="completed",
 
-        real_dataset_name=evaluation_run.real_dataset_name,
-        synthetic_dataset_name=evaluation_run.synthetic_dataset_name,
+        real_dataset_id=evaluation_run.realDatasetId,
+        synthetic_dataset_id=evaluation_run.syntheticDatasetId,
 
-        overall_similarity_score=evaluation_run.overall_similarity_score,
-        numerical_similarity_score=evaluation_run.numerical_similarity_score,
-        categorical_similarity_score=evaluation_run.categorical_similarity_score,
-        relationship_similarity_score=evaluation_run.relationship_similarity_score,
+        overall_similarity_score=evaluation_run.evaluationResult.get("overallSimilarityScore"),
+        numerical_similarity_score=evaluation_run.evaluationResult.get("numericalSimilarityScore"),
+        categorical_similarity_score=evaluation_run.evaluationResult.get("categoricalSimilarityScore"),
+        relationship_similarity_score=evaluation_run.evaluationResult.get("relationshipSimilarityScore"),
 
-        metrics_used=evaluation_run.metrics_used,
+        metrics_used=evaluation_run.metricsUsed,
 
-        config_json=evaluation_run.config_json,
-        result_json=evaluation_run.result_json
+        config_json=evaluation_run.evaluationConfig,
+        result_json=evaluation_run.evaluationResult
     )
 
     db.add(data)

@@ -1,23 +1,22 @@
 from pydantic import BaseModel
+from datetime import datetime
 from typing import Optional, List, Dict, Any
 
 
-class EvaluationRunCreate(BaseModel):
-    run_id: str
+class EvaluationRunRequest(BaseModel):
+    evaluationConfig: Dict[str, Any]
+    evaluationResult: Dict[str, Any]
+    realDatasetId: int
+    syntheticDatasetId: int
+    metricsUsed: List[str]
+
+class EvaluationRunResponse(BaseModel):
+    id: str
     run_name: str
-
-    created_at_label: Optional[str] = None
-    status: str = "completed"
-
-    real_dataset_name: str
-    synthetic_dataset_name: str
-
-    overall_similarity_score: Optional[float] = None
-    numerical_similarity_score: Optional[float] = None
-    categorical_similarity_score: Optional[float] = None
-    relationship_similarity_score: Optional[float] = None
-
-    metrics_used: Optional[List[str]] = []
-
-    config_json: Dict[str, Any]
-    result_json: Dict[str, Any]
+    created_at: datetime
+    created_at_label: str
+    real_dataset_id: int
+    synthetic_dataset_id: int
+    overall_similarity_score: float | None
+    metrics_used: List[str]
+    status: str
