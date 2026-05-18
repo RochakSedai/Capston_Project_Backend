@@ -40,8 +40,8 @@ def list_comparisons(
             "created_at": item.created_at,
             "created_at_label": item.created_at_label,
 
-            "real_dataset_name": item.real_dataset_name,
-            "synthetic_dataset_name": item.synthetic_dataset_name,
+            "real_dataset_id": item.real_dataset_id,
+            "synthetic_dataset_id": item.synthetic_dataset_id,
 
             "overall_similarity_score": item.overall_similarity_score,
 
